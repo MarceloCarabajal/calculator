@@ -1,35 +1,54 @@
+/* eslint no-eval: 0*/
 import "./App.css";
 import Result from "./components/Result";
-import Button from "./components/Button";
+import { useState } from 'react'
+import Functions from "./components/Functions";
 import MathOperations from "./components/MathOperations";
+import Numbers from "./components/Numbers";
+import words from "lodash.words";
+
 
 const App = () => {
-  console.log("Soy app")
+  const [stack, setStack] = useState("");
 
-  const clickHandlerFunction = (text) => {
-    console.log("Button.clickHandler", text)
-  }
+  const items = words(stack, /[^-^+^*^/]+/g)
+  const value = items.length > 0 ? items[items.length-1] : "0";
+
+  console.log("items: ", items)
 
   return (
     <main className="react-calculator">
-      <Result value={"0"} />
-      <div className="numbers">
-        <Button text = {"1"} clickHandler={clickHandlerFunction}/>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        <button>5</button>
-        <button>6</button>
-        <button>7</button>
-        <button>8</button>
-        <button>9</button>
-        <button>0</button>
-      </div>
-      <div className="functions">
-        <button>clear</button>
-        <button>r</button>
-      </div>
-      <MathOperations />
+      <Result value={value} />
+      <Numbers 
+        onClickNumber={ number => {
+          console.log("click en number: ", number);
+          setStack(`${stack}${number}`)
+        }}
+      />
+      <Functions 
+      onContentClear =  {() =>{
+        console.log("Content clear");
+        setStack("");
+      }}
+
+      onDelete = {() => {
+        if(stack.length > 0){
+          const newStack = stack.substring(0, stack.length -1)
+          console.log("On Delete");
+          setStack(newStack)
+        }
+      }}
+      />
+      <MathOperations 
+        onClickOperation={operation => {
+        console.log("operation: ", operation)
+        setStack(`${stack}${operation}`)
+        }}
+        onClickEqual={equal => {
+        console.log("Equal: ", equal)
+        setStack(eval(stack).toString())
+        }}
+        />
     </main>
   );
 };
