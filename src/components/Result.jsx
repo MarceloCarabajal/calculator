@@ -2,8 +2,6 @@ import propTypes from "prop-types"
 
 
 const Result = ({value}) => {
-    
-    console.log("Renderizacion de result", value)
 
     return(
         <div className="result">
